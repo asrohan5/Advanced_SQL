@@ -62,6 +62,29 @@ sqlSELECT customer_id, order_date, amount,
   FIRST_VALUE(amount) OVER (PARTITION BY customer_id ORDER BY order_date) AS first_order_value  
 FROM orders;   
 
-
+   
       
-### Look out for the exercises on this chapter
+### Exercises   
+-- orders table  
+customer_id  INT  
+order_id     INT  
+order_date   DATE  
+amount       DECIMAL  
+category     VARCHAR  
+
+-- Sample data:  
+-- (1, 101, '2024-01-05', 120.00, 'Electronics')  
+-- (1, 102, '2024-02-10', 80.00,  'Clothing')  
+-- (1, 103, '2024-03-15', 200.00, 'Electronics')  
+-- (2, 104, '2024-01-20', 50.00,  'Clothing')  
+-- (2, 105, '2024-02-28', 300.00, 'Electronics')  
+-- (3, 106, '2024-01-08', 90.00,  'Clothing')  
+-- (3, 107, '2024-03-22', 110.00, 'Clothing')  
+  
+P1. For each order, show the customer's running total spend (cumulative sum of amount ordered by order_date, per customer). Columns: customer_id, order_id, amount, running_total.  
+P2. Rank each customer's orders by amount (highest = rank 1) within that customer. Use DENSE_RANK. Columns: customer_id, order_id, amount, spend_rank.  
+P3. For each order, show the previous order's amount for that customer (NULL if it's their first order). Columns: customer_id, order_id, order_date, amount, prev_amount.  
+P4. For each order, show the customer's average spend across all their orders (not a running avg — their overall average). Columns: customer_id, order_id, amount, customer_avg_spend.  
+P5. Find each customer's single highest-value order. Return only those rows. (Hint: you'll need a subquery or CTE wrapping a window function.) Columns: customer_id, order_id, amount.  
+
+
