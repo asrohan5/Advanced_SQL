@@ -15,7 +15,7 @@ PARTITION BY — like GROUP BY but without collapsing. Resets the window for eac
 ORDER BY — required for ranking and offset functions. Defines which row is "first", "second" etc within the partition.
 ROWS frame — for running totals and moving averages. ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW means "from the very first row up to this row."
 
-## The 5 function families you must know cold
+## The 5 function families you must know
 
 1. Ranking — ROW_NUMBER(), RANK(), DENSE_RANK()  
 SELECT name, score,
