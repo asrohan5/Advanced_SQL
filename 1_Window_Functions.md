@@ -30,17 +30,33 @@ DENSE_RANK → 1, 1, 2 (no gap)
 
 
 
-2. Offset — LAG(), LEAD()  
+2. Offset — LAG(), LEAD()
+
+The idea is simple: for each row, look at the row before it (or after it) within an ordered sequence.  
+Think of it like standing in a queue. You are the "current row." The person directly behind you is LAG(1). The person in front of you is LEAD(1).  
+The most common business use case: month-over-month change. You have daily or monthly revenue, and for each row you want to know what the previous period's value was — so you can compute growth.  
+
+LAG(column, offset, default)  OVER (PARTITION BY ... ORDER BY ...)  
+column — which value to look at
+offset — how many rows back (default is 1)
+default — what to return if the row doesn't exist (e.g. first row has no previous)
+
 SELECT date, revenue,  
   LAG(revenue, 1)  OVER (ORDER BY date)  AS prev_day_revenue,  
   LEAD(revenue, 1) OVER (ORDER BY date)  AS next_day_revenue  
 FROM daily_sales;  
 
-
 LAG(col, n) looks n rows behind. LEAD(col, n) looks n rows ahead. Both accept a third argument as a default if the row doesn't exist: LAG(revenue, 1, 0).  
 
 
 3. Aggregate over window — SUM(), AVG(), COUNT(), MAX(), MIN()  
+
+AVG() (and any aggregate) over a window — the ORDER BY trap  
+This is the subtlest concept of the three. The rule is:  
+When you add ORDER BY inside OVER() on an aggregate function, SQL silently applies a default frame: from the first row of the partition up to the current row. This turns a static average into a running average.  
+
+Most people don't realise this until their numbers look wrong in production.  
+
 SELECT customer_id, order_date, amount,  
   SUM(amount) OVER (PARTITION BY customer_id ORDER BY order_date  
                       ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS running_total,  
